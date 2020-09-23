@@ -4,7 +4,12 @@ export const getSomething = () => {
   return new Promise((resolve, reject) =>
     db.transaction(
       transaction => {
-        transaction.executeSql(`select * from gato`, [], (_, { rows }) => {
+        transaction.executeSql(
+          `SELECT p.*, round(avg(r.score), 1) as rating
+          FROM product p
+          LEFT JOIN rating r ON r.product_id = p.id
+          GROUP BY p.id
+         `, [], (_, { rows }) => {
           resolve(rows)
         }),
           sqlError => {

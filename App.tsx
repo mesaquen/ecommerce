@@ -21,7 +21,7 @@ export default function App (): JSX.Element {
         <Stack.Screen
           name='ProductList'
           component={ProductList}
-          options={{ title: 'Produtos' }}
+          options={{ title: 'Produtos', headerLeft: null }}
         />
 
         <Stack.Screen
