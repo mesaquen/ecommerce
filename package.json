@@ -4,6 +4,7 @@
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.1",
     "expo": "~39.0.0",
+    "expo-sqlite": "~8.4.0",
     "react": "~16.13.0",
     "react-dom": "~16.13.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
