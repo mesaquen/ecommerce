@@ -1,19 +1,33 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler'
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import Cart from './src/screens/cart/Cart'
+import ProductDetails from './src/screens/product-details/ProductDetail'
+import ProductList from './src/screens/product-list/ProductList'
 
-export default function App() {
+const Stack = createStackNavigator()
+
+export default function App (): JSX.Element {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='ProductList'>
+        <Stack.Screen
+          name='ProductList'
+          component={ProductList}
+          options={{ title: 'Produtos' }}
+        />
+        <Stack.Screen
+          name='ProductDetails'
+          component={ProductDetails}
+          options={{ title: 'Detalhes' }}
+        />
+        <Stack.Screen
+          name='Cart'
+          component={Cart}
+          options={{ title: 'Carrinho' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
