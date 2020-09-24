@@ -18,7 +18,7 @@ export const getProducts = (
       transaction => {
         const whereClause = where ? `WHERE ${where}` : null
         transaction.executeSql(
-          `SELECT p.*, round(avg(r.score), 1) as rating
+          `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
           FROM product p
           LEFT JOIN rating r ON r.product_id = p.id
           ${whereClause || ''}
