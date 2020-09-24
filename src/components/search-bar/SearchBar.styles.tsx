@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
 
   input: {
-      paddingHorizontal: 8,
+    paddingHorizontal: 8,
     borderWidth: 1,
     flex: 1,
     borderColor: 'black',

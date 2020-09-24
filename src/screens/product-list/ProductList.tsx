@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {   View, Button, FlatList, ActivityIndicator } from 'react-native'
+import { View, Button, FlatList, ActivityIndicator } from 'react-native'
 import { getProducts } from '../../logic/product/productService'
 import ItemSeparator from './item/ItemSeparator'
 import ProductItem from './item/ProductItem'
@@ -21,6 +21,14 @@ const ProductList = ({ navigation }): JSX.Element => {
     }
     fetchData()
   }, [])
+
+  const handleSearch = async name => {
+    setLoading(true)
+    const data = await getProducts(name)
+    setItems(data._array)
+    setPage(data.page ?? 0)
+    setLoading(false)
+  }
 
   const goToDetails = () => {
     navigation.navigate('ProductDetails')
@@ -58,7 +66,7 @@ const ProductList = ({ navigation }): JSX.Element => {
   }
 
   const renderHeader = () => {
-    return <SearchBar />
+    return <SearchBar onSearch={handleSearch} />
   }
 
   const renderFooter = () => {

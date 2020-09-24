@@ -16,7 +16,7 @@ export const getProducts = (
   return new Promise((resolve, reject) =>
     db.transaction(
       transaction => {
-        const whereClause = whereTitle ? `WHERE p.title LIKE %${whereTitle}%` : null
+        const whereClause = whereTitle ? `WHERE p.title LIKE '%${whereTitle}%'` : null
         transaction.executeSql(
           `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
           FROM product p
