@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, View } from 'react-native'
+import { Button, TouchableOpacity, Text, View } from 'react-native'
 import styles from './ProductItem.styles'
 import StarRating from '../../../components/star-rating/StarRating'
 
@@ -29,9 +29,14 @@ const ProductItem = ({
   <TouchableOpacity key={id} style={styles.item}>
     <View style={styles.imageContainer}></View>
     <View style={styles.infoContainer}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.price}>{price}</Text>
-      <StarRating rating={rating} reviews={reviews} compact />
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <StarRating rating={rating} reviews={reviews} compact />
+      </View>
+      <View style={styles.priceContainer}>
+        <Text style={styles.price}>{price}</Text>
+        <Button title='ADd to cart' onPress={() => undefined} />
+      </View>
     </View>
   </TouchableOpacity>
 )

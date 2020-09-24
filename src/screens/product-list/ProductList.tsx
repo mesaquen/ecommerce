@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { View, Button, FlatList } from 'react-native'
+import {  View, Button, FlatList, ActivityIndicator } from 'react-native'
 import { getProducts } from '../../logic/product/productService'
+import ItemSeparator from './item/ItemSeparator'
 import ProductItem from './item/ProductItem'
+import styles from './ProductList.styles'
 
 const ProductList = ({ navigation }): JSX.Element => {
+  const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const [page, setPage] = useState(0)
   const [showButton, setShowButton] = useState(true)
@@ -13,6 +16,7 @@ const ProductList = ({ navigation }): JSX.Element => {
       const data = await getProducts()
       setItems(data._array)
       setPage(data.page ?? 0)
+      setLoading(false)
     }
     fetchData()
   }, [])
@@ -27,7 +31,9 @@ const ProductList = ({ navigation }): JSX.Element => {
 
   const loadNextPage = async () => {
     const nextPage = page + 1
+    setLoading(true)
     const data = await getProducts(null, null, nextPage)
+    setLoading(false)
     if (data.length) {
       setItems(items.concat(data._array))
       setPage(nextPage)
@@ -50,10 +56,27 @@ const ProductList = ({ navigation }): JSX.Element => {
     )
   }
 
+  const renderFooter = () => {
+    if (loading) {
+      return <ActivityIndicator color='#aaa' />
+    }
+    return (
+      showButton && (
+        <View style={styles.footerContainer}>
+          <Button onPress={loadNextPage} title='Ver mais' />
+        </View>
+      )
+    )
+  }
+
   return (
     <View>
-      <FlatList data={items} renderItem={renderItem} />
-      {showButton && <Button onPress={loadNextPage} title='Go to' />}
+      <FlatList
+        data={items}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        ListFooterComponent={renderFooter}
+      />
     </View>
   )
 }
