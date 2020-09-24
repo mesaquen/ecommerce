@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Button } from 'react-native'
-import { getSomething } from '../../logic/product/productService'
+import { getProducts } from '../../logic/product/productService'
 
 const ProductList = ({ navigation }): JSX.Element => {
   const [txt, setTxt] = useState('')
   useEffect(() => {
     const fetchData = async () => {
-      const images = await getSomething();
+      const images = await getProducts(null, null, 2);
       setTxt(JSON.stringify(images));
     }
     fetchData();
