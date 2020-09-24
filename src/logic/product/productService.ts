@@ -8,22 +8,22 @@ type Paginable = {
 type ProductResults = Paginable & SQLResultSetRowList
 
 export const getProducts = (
-  where?: string,
-  orderBy?: string,
+  whereTitle?: string,
+  orderDirection?: string,
   page = 0,
   limit = 10,
 ): Promise<ProductResults> => {
   return new Promise((resolve, reject) =>
     db.transaction(
       transaction => {
-        const whereClause = where ? `WHERE ${where}` : null
+        const whereClause = whereTitle ? `WHERE p.title LIKE %${whereTitle}%` : null
         transaction.executeSql(
           `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
           FROM product p
           LEFT JOIN rating r ON r.product_id = p.id
           ${whereClause || ''}
           GROUP BY p.id
-          ${orderBy || ''}
+          ORDER BY p.price ${orderDirection || 'ASC'}
           LIMIT ${page * limit}, ${limit}
          `,
           [],

@@ -27,7 +27,7 @@ const ProductItem = ({
   onAddPress,
   onRemovePress,
 }: ProductItemProps): JSX.Element => (
-  <TouchableOpacity key={id} style={styles.item}>
+  <TouchableOpacity key={id} style={styles.item} onPress={onPress}>
     <View style={styles.imageContainer}></View>
     <View style={styles.infoContainer}>
       <View style={styles.titleContainer}>
@@ -38,7 +38,8 @@ const ProductItem = ({
         <View style={styles.price}>
           <PriceLabel price={price} discount={discount} />
           </View>
-        <Button title='ADd to cart' onPress={() => undefined} />
+        {onAddPress && <Button title='Comprar' onPress={onAddPress} />}
+        {onRemovePress && <Button title='Remover' onPress={onRemovePress} />}
       </View>
     </View>
   </TouchableOpacity>

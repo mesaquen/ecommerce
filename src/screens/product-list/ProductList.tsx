@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import {  View, Button, FlatList, ActivityIndicator } from 'react-native'
+import {   View, Button, FlatList, ActivityIndicator } from 'react-native'
 import { getProducts } from '../../logic/product/productService'
 import ItemSeparator from './item/ItemSeparator'
 import ProductItem from './item/ProductItem'
 import styles from './ProductList.styles'
+import SearchBar from '../../components/search-bar/SearchBar'
 
 const ProductList = ({ navigation }): JSX.Element => {
   const [loading, setLoading] = useState(true)
@@ -56,6 +57,10 @@ const ProductList = ({ navigation }): JSX.Element => {
     )
   }
 
+  const renderHeader = () => {
+    return <SearchBar />
+  }
+
   const renderFooter = () => {
     if (loading) {
       return <ActivityIndicator color='#aaa' />
@@ -74,6 +79,7 @@ const ProductList = ({ navigation }): JSX.Element => {
       <FlatList
         data={items}
         renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
         ItemSeparatorComponent={ItemSeparator}
         ListFooterComponent={renderFooter}
       />
