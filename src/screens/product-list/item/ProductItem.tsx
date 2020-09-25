@@ -11,7 +11,7 @@ type ProductItemProps = {
   rating: number
   reviews: number
   discount?: number
-  onPress?: () => void
+  onPress?: (id) => void
   onAddPress?: () => void
   onRemovePress?: () => void
 }
@@ -26,22 +26,25 @@ const ProductItem = ({
   onPress,
   onAddPress,
   onRemovePress,
-}: ProductItemProps): JSX.Element => (
-  <TouchableOpacity key={id} style={styles.item} onPress={onPress}>
-    <View style={styles.imageContainer}></View>
-    <View style={styles.infoContainer}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <StarRating rating={rating} reviews={reviews} compact />
-      </View>
-      <View style={styles.priceContainer}>
-        <View style={styles.price}>
-          <PriceLabel price={price} discount={discount} />
+}: ProductItemProps): JSX.Element => {
+  const handleOnPress = () => onPress(id)
+  return (
+    <TouchableOpacity key={id} style={styles.item} onPress={handleOnPress}>
+      <View style={styles.imageContainer}></View>
+      <View style={styles.infoContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{title}</Text>
+          <StarRating rating={rating} reviews={reviews} compact />
+        </View>
+        <View style={styles.priceContainer}>
+          <View style={styles.price}>
+            <PriceLabel price={price} discount={discount} />
           </View>
-        {onAddPress && <Button title='Comprar' onPress={onAddPress} />}
-        {onRemovePress && <Button title='Remover' onPress={onRemovePress} />}
+          {onAddPress && <Button title='Comprar' onPress={onAddPress} />}
+          {onRemovePress && <Button title='Remover' onPress={onRemovePress} />}
+        </View>
       </View>
-    </View>
-  </TouchableOpacity>
-)
+    </TouchableOpacity>
+  )
+}
 export default ProductItem

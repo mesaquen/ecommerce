@@ -61,6 +61,7 @@ const ProductList = ({ navigation }): JSX.Element => {
         rating={item.rating}
         reviews={item.reviews}
         discount={item.discount}
+        onPress={goToDetails}
       />
     )
   }
