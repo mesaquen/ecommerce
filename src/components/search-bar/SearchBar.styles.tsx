@@ -19,4 +19,6 @@ export default StyleSheet.create({
     borderRadius: 4,
     marginRight: 8,
   },
+
+  sortIcon: {marginLeft: 8}
 })

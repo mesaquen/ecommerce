@@ -91,6 +91,10 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
     goToCart()
   }
 
+  const handleRemove = () => {
+    dispatch(removeFromCart(params.id))
+  }
+
   const isInCart = productsInCart.some(product => product.id === params.id)
 
   if (product) {
@@ -122,7 +126,11 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
                       </View>
                     )}
                     {isInCart && (
-                      <MCI.Button name='cart-remove' backgroundColor='red'>
+                      <MCI.Button
+                        name='cart-remove'
+                        backgroundColor='red'
+                        onPress={handleRemove}
+                      >
                         Remover
                       </MCI.Button>
                     )}

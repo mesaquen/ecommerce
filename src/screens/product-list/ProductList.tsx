@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { View, Button, FlatList, ActivityIndicator } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 import { getProducts } from '../../logic/product/productService'
 import ItemSeparator from '../../components/separator/ItemSeparator'
@@ -8,9 +9,21 @@ import styles from './ProductList.styles'
 import detailsStyles from '../product-details/ProductDetails.styles'
 import SearchBar from '../../components/search-bar/SearchBar'
 import { Product } from '../../types/commonTypes'
+import { selectCartItems } from '../../redux/selectors/cartSelectors'
+import { addToCart, removeFromCart } from '../../redux/actions/cartActions'
+import EmptyState from '../../components/empty-state/EmptyState'
+
+const SORT_ORDER = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+}
 
 const ProductList = ({ navigation }): JSX.Element => {
+  const productsInCart = useSelector(selectCartItems)
+  const dispatch = useDispatch()
+  const [sort, setSort] = useState('ASC')
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [items, setItems] = useState([])
   const [page, setPage] = useState(0)
   const [showButton, setShowButton] = useState(true)
@@ -30,6 +43,10 @@ const ProductList = ({ navigation }): JSX.Element => {
     })
   }, [navigation])
 
+  const isProductInCart = (id: string): boolean => {
+    return productsInCart.some(item => item.id === id)
+  }
+
   const extractItems = (data): Product[] => {
     const nextItems = []
     for (let i = 0; i < data.rows.length; i++) {
@@ -40,7 +57,7 @@ const ProductList = ({ navigation }): JSX.Element => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getProducts()
+      const data = await getProducts(null, sort)
       const nextItems = extractItems(data)
       setItems(nextItems)
       setPage(data.page ?? 0)
@@ -51,13 +68,28 @@ const ProductList = ({ navigation }): JSX.Element => {
 
   const goToCart = () => navigation.navigate('Cart')
 
-  const handleSearch = async name => {
-    setLoading(true)
-    const data = await getProducts(name)
+  const toggleSort = () => {
+    const nextSort = sort === 'ASC' ? 'DESC' : 'ASC'
+    setSort(nextSort)
+    handleSearch(null, nextSort)
+  }
+
+  const handleSearch = async (
+    name: string,
+    sortOrder?: typeof SORT_ORDER.ASC | typeof SORT_ORDER.DESC,
+  ) => {
+    setRefreshing(true)
+    const data = await getProducts(name, sortOrder)
     const nextItems = extractItems(data)
     setItems(nextItems)
     setPage(data.page ?? 0)
-    setLoading(false)
+    setRefreshing(false)
+    setShowButton(true)
+  }
+
+  const handleRefresh = () => {
+    handleSearch(null, SORT_ORDER.ASC)
+    setSort(SORT_ORDER.ASC)
   }
 
   const goToDetails = id => {
@@ -82,7 +114,21 @@ const ProductList = ({ navigation }): JSX.Element => {
     }
   }
 
+  const handleAddToCart = (product: Product) => {
+    dispatch(addToCart(product))
+  }
+
+  const handleRemoveItem = (id: string) => {
+    dispatch(removeFromCart(id))
+  }
+
+  const handleShopAndRedirect = (product: Product) => {
+    handleAddToCart(product)
+    goToCart()
+  }
+
   const renderItem = ({ item }) => {
+    const inCart = isProductInCart(item.id)
     return (
       <ProductItem
         id={item.id}
@@ -93,12 +139,16 @@ const ProductList = ({ navigation }): JSX.Element => {
         reviews={item.reviews}
         discount={item.discount}
         onPress={goToDetails}
+        onShopPress={() => handleShopAndRedirect(item)}
+        onAddPress={() => handleAddToCart(item)}
+        onRemovePress={() => handleRemoveItem(item.id)}
+        inCart={inCart}
       />
     )
   }
 
   const renderHeader = () => {
-    return <SearchBar onSearch={handleSearch} />
+    return <SearchBar onSearch={handleSearch} sort={sort} onSort={toggleSort} />
   }
 
   const renderFooter = () => {
@@ -122,6 +172,9 @@ const ProductList = ({ navigation }): JSX.Element => {
         ListHeaderComponent={renderHeader}
         ItemSeparatorComponent={ItemSeparator}
         ListFooterComponent={renderFooter}
+        ListEmptyComponent={EmptyState}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
     </View>
   )

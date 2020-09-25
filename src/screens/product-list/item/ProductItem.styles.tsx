@@ -21,19 +21,34 @@ export default StyleSheet.create({
   infoContainer: {
     flex: 1,
     paddingLeft: 8,
-    flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  upperContent: {
+    flex:1,
+    flexDirection: "row",
   },
   titleContainer: {
     flexDirection: 'column',
+    flex: 1
   },
   price: {
     marginBottom: 12,
   },
   priceContainer: {
-    flex: 0,
     flexShrink: 0,
+    width: 100,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+  buttonContainer: {
+    flexShrink: 0,
+    flexDirection: "row",
+    justifyContent: "flex-end"
+  },
+  flat: {
+    color: '#09D'
+  },
+  flatRemove: {
+    color: '#D30'
+  }
 })
