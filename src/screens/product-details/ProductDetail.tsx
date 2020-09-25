@@ -6,6 +6,9 @@ import {
   FlatList,
   View,
 } from 'react-native'
+import {useDispatch} from 'react-redux'
+import {addToCart, removeFromCart} from '../../redux/actions/cartActions'
+import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 import { SliderBox } from 'react-native-image-slider-box'
 import MoneyText from '../../components/money-text/MoneyText'
 import ItemSeparator from '../../components/separator/ItemSeparator'
@@ -16,7 +19,8 @@ import { getRatingByProductId } from '../../logic/rating/ratingService'
 import styles from './ProductDetails.styles'
 import RatingListItem from './RatingListItem'
 
-const ProductDetails = ({ route: { params } }): JSX.Element => {
+const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
+  const dispatch = useDispatch();
   const [product, setProduct] = useState(null)
   const [comments, setComments] = useState([])
   const [images, setImages] = useState([])
@@ -59,6 +63,17 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
     )
   }
 
+  const handleAddToCart = () => {
+    dispatch(addToCart(product))
+  }
+
+  const handleAddToCartAndNavigate = () => {
+    handleAddToCart();
+    navigation.navigate('Cart')
+  }
+
+  const isOnCart = false
+
   if (product) {
     return (
       <SafeAreaView>
@@ -67,9 +82,28 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
             <View>
               <SliderBox sliderBoxHeight={230} images={images} />
               <View style={styles.infoContainer}>
-                <Text style={[styles.bold, styles.bigText, styles.title]}>
-                  {product.title}
-                </Text>
+                <View style={styles.topContainer}>
+                  <Text style={[styles.bold, styles.bigText, styles.title]}>
+                    {product.title}
+                  </Text>
+                  <View style={styles.buttonsContainer}>
+                    {!isOnCart && (
+                      <MCI.Button name='cart-outline' onPress={handleAddToCartAndNavigate}>Comprar</MCI.Button>
+                    )}
+                    {!isOnCart && (
+                      <View style={styles.lastButton}>
+                        <MCI.Button name='cart-plus' onPress={handleAddToCart}>
+                          Adcionar ao carrinho
+                        </MCI.Button>
+                      </View>
+                    )}
+                    {isOnCart && (
+                      <MCI.Button name='cart-remove' backgroundColor='red'>
+                        Remover
+                      </MCI.Button>
+                    )}
+                  </View>
+                </View>
                 <View style={[styles.infoContainer, styles.card]}>
                   <MoneyText
                     style={[styles.bold, styles.bigText, styles.title]}
