@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
   SafeAreaView,
   ActivityIndicator,
@@ -6,8 +6,8 @@ import {
   FlatList,
   View,
 } from 'react-native'
-import {useDispatch} from 'react-redux'
-import {addToCart, removeFromCart} from '../../redux/actions/cartActions'
+import { useDispatch } from 'react-redux'
+import { addToCart, removeFromCart } from '../../redux/actions/cartActions'
 import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 import { SliderBox } from 'react-native-image-slider-box'
 import MoneyText from '../../components/money-text/MoneyText'
@@ -20,10 +20,18 @@ import styles from './ProductDetails.styles'
 import RatingListItem from './RatingListItem'
 
 const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const [product, setProduct] = useState(null)
   const [comments, setComments] = useState([])
   const [images, setImages] = useState([])
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return <MCI.Button style={styles.cartButton} iconStyle={styles.cartButton} name='cart' onPress={goToCart} />
+      },
+    })
+  }, [navigation])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,9 +75,11 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
     dispatch(addToCart(product))
   }
 
+  const goToCart = () => navigation.navigate('Cart')
+
   const handleAddToCartAndNavigate = () => {
-    handleAddToCart();
-    navigation.navigate('Cart')
+    handleAddToCart()
+    goToCart()
   }
 
   const isOnCart = false
@@ -88,7 +98,12 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
                   </Text>
                   <View style={styles.buttonsContainer}>
                     {!isOnCart && (
-                      <MCI.Button name='cart-outline' onPress={handleAddToCartAndNavigate}>Comprar</MCI.Button>
+                      <MCI.Button
+                        name='cart-outline'
+                        onPress={handleAddToCartAndNavigate}
+                      >
+                        Comprar
+                      </MCI.Button>
                     )}
                     {!isOnCart && (
                       <View style={styles.lastButton}>

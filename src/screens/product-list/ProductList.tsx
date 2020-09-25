@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { View, Button, FlatList, ActivityIndicator } from 'react-native'
+import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 import { getProducts } from '../../logic/product/productService'
 import ItemSeparator from '../../components/separator/ItemSeparator'
 import ProductItem from './item/ProductItem'
 import styles from './ProductList.styles'
+import detailsStyles from '../product-details/ProductDetails.styles'
 import SearchBar from '../../components/search-bar/SearchBar'
 
 const ProductList = ({ navigation }): JSX.Element => {
@@ -12,15 +14,36 @@ const ProductList = ({ navigation }): JSX.Element => {
   const [page, setPage] = useState(0)
   const [showButton, setShowButton] = useState(true)
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <MCI.Button
+            style={detailsStyles.cartButton}
+            iconStyle={detailsStyles.cartButton}
+            name='cart'
+            onPress={goToCart}
+          />
+        )
+      },
+    })
+  }, [navigation])
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProducts()
-      setItems(data._array)
+      const nextItems = []
+      for (let i = 0; i < data.rows.length; i++) {
+        nextItems.push(data.rows.item(i))
+      }
+      setItems(nextItems)
       setPage(data.page ?? 0)
       setLoading(false)
     }
     fetchData()
   }, [])
+
+  const goToCart = () => navigation.navigate('Cart')
 
   const handleSearch = async name => {
     setLoading(true)
@@ -30,8 +53,8 @@ const ProductList = ({ navigation }): JSX.Element => {
     setLoading(false)
   }
 
-  const goToDetails = (id) => {
-    navigation.navigate('ProductDetails', {id})
+  const goToDetails = id => {
+    navigation.navigate('ProductDetails', { id })
   }
 
   const hideButton = () => {

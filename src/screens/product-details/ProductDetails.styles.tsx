@@ -11,7 +11,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 12
+    marginBottom: 12,
   },
   lastButton: { marginLeft: 12 },
   title: {
@@ -32,5 +32,10 @@ export default StyleSheet.create({
   },
   card: {
     backgroundColor: '#ddd',
+  },
+  cartButton: {
+    marginRight: 0,
+    color: '#777',
+    backgroundColor: '#FFF',
   },
 })

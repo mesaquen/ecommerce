@@ -2,16 +2,15 @@ import { SQLResultSetRowList } from 'expo-sqlite'
 import db from '../../database/DBConnection'
 
 type Paginable = {
+  rows: SQLResultSetRowList
   page: number
 }
-
-type ProductResults = Paginable & SQLResultSetRowList
 
 const BASE_PRODUCT_SQL = `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
 FROM product p
 LEFT JOIN rating r ON r.product_id = p.id`
 
-export const getProductById = (id: string): Promise<SQLResultSetRowList> => {
+export const getProductById = (id: string): Promise<Paginable> => {
   return new Promise((resolve, reject) => {
     db.transaction(
       transaction => {
@@ -42,7 +41,7 @@ export const getProducts = (
   orderDirection?: string,
   page = 0,
   limit = 10,
-): Promise<ProductResults> => {
+): Promise<Paginable> => {
   return new Promise((resolve, reject) =>
     db.transaction(
       transaction => {
@@ -58,7 +57,7 @@ export const getProducts = (
          `,
           [],
           (_, { rows }) => {
-            resolve({ ...rows, page })
+            resolve({ rows, page })
           },
           sqlError => {
             console.log(sqlError)
