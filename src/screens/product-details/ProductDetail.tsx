@@ -6,7 +6,7 @@ import {
   FlatList,
   View,
 } from 'react-native'
-import { FlatListSlider } from 'react-native-flatlist-slider'
+import { SliderBox } from 'react-native-image-slider-box'
 import MoneyText from '../../components/money-text/MoneyText'
 import ItemSeparator from '../../components/separator/ItemSeparator'
 import StarRating from '../../components/star-rating/StarRating'
@@ -42,8 +42,8 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
   useEffect(() => {
     const fetchImages = async () => {
       const data = await getImagesByProductId(params.id)
-      const productImages = data.map(img => ({banner: img.url}))
-      setImages(data)
+      const productImages = data.map(img => img.url)
+      setImages(productImages)
       console.log('\n')
       console.log('== FETCHING IMAGES FOR ==', params.id)
       console.log(JSON.stringify(data))
@@ -63,37 +63,33 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
     return (
       <SafeAreaView>
         <FlatList
-        ListHeaderComponent={
-          <View>
-          <FlatListSlider
-            data={images}
-            extraData={images}
-            imageKey='url'
-            onPress={() => undefined}
-            autoscroll={false}
-          />
-          <View style={styles.infoContainer}>
-            <Text style={[styles.bold, styles.bigText, styles.title]}>
-              {product.title}
-            </Text>
-            <View style={[styles.infoContainer, styles.card]}>
-              <MoneyText
-                style={[styles.bold, styles.bigText, styles.title]}
-                value={product.price}
-              />
-              <Text style={[styles.bold, styles.title]}>Description</Text>
-              <Text style={[styles.secondaryText]}>{product.description}</Text>
+          ListHeaderComponent={
+            <View>
+              <SliderBox sliderBoxHeight={230} images={images} />
+              <View style={styles.infoContainer}>
+                <Text style={[styles.bold, styles.bigText, styles.title]}>
+                  {product.title}
+                </Text>
+                <View style={[styles.infoContainer, styles.card]}>
+                  <MoneyText
+                    style={[styles.bold, styles.bigText, styles.title]}
+                    value={product.price}
+                  />
+                  <Text style={[styles.bold, styles.title]}>Description</Text>
+                  <Text style={[styles.secondaryText]}>
+                    {product.description}
+                  </Text>
+                </View>
+                <Text style={[styles.bold, styles.bigText]}>Avaliações</Text>
+                <StarRating rating={product.rating} reviews={product.reviews} />
+              </View>
             </View>
-            <Text style={[styles.bold, styles.bigText]}>Avaliações</Text>
-            <StarRating rating={product.rating} reviews={product.reviews} />
-          </View>
-        </View>
-        }
+          }
           data={comments}
           renderItem={renderRatingItem}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={commentsKeyExtractor}
-          />
+        />
       </SafeAreaView>
     )
   }
