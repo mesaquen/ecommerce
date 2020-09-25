@@ -6,7 +6,7 @@ import {
   FlatList,
   View,
 } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToCart, removeFromCart } from '../../redux/actions/cartActions'
 import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 import { SliderBox } from 'react-native-image-slider-box'
@@ -18,9 +18,11 @@ import { getProductById } from '../../logic/product/productService'
 import { getRatingByProductId } from '../../logic/rating/ratingService'
 import styles from './ProductDetails.styles'
 import RatingListItem from './RatingListItem'
+import { selectCartItems } from '../../redux/selectors/cartSelectors'
 
 const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
   const dispatch = useDispatch()
+  const productsInCart = useSelector(selectCartItems)
   const [product, setProduct] = useState(null)
   const [comments, setComments] = useState([])
   const [images, setImages] = useState([])
@@ -28,7 +30,14 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        return <MCI.Button style={styles.cartButton} iconStyle={styles.cartButton} name='cart' onPress={goToCart} />
+        return (
+          <MCI.Button
+            style={styles.cartButton}
+            iconStyle={styles.cartButton}
+            name='cart'
+            onPress={goToCart}
+          />
+        )
       },
     })
   }, [navigation])
@@ -82,7 +91,7 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
     goToCart()
   }
 
-  const isOnCart = false
+  const isInCart = productsInCart.some(product => product.id === params.id)
 
   if (product) {
     return (
@@ -97,7 +106,7 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
                     {product.title}
                   </Text>
                   <View style={styles.buttonsContainer}>
-                    {!isOnCart && (
+                    {!isInCart && (
                       <MCI.Button
                         name='cart-outline'
                         onPress={handleAddToCartAndNavigate}
@@ -105,14 +114,14 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
                         Comprar
                       </MCI.Button>
                     )}
-                    {!isOnCart && (
+                    {!isInCart && (
                       <View style={styles.lastButton}>
                         <MCI.Button name='cart-plus' onPress={handleAddToCart}>
                           Adcionar ao carrinho
                         </MCI.Button>
                       </View>
                     )}
-                    {isOnCart && (
+                    {isInCart && (
                       <MCI.Button name='cart-remove' backgroundColor='red'>
                         Remover
                       </MCI.Button>
