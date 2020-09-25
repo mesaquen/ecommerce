@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Button, FlatList, ActivityIndicator } from 'react-native'
 import { getProducts } from '../../logic/product/productService'
-import ItemSeparator from './item/ItemSeparator'
+import ItemSeparator from '../../components/separator/ItemSeparator'
 import ProductItem from './item/ProductItem'
 import styles from './ProductList.styles'
 import SearchBar from '../../components/search-bar/SearchBar'
@@ -30,8 +30,8 @@ const ProductList = ({ navigation }): JSX.Element => {
     setLoading(false)
   }
 
-  const goToDetails = () => {
-    navigation.navigate('ProductDetails')
+  const goToDetails = (id) => {
+    navigation.navigate('ProductDetails', {id})
   }
 
   const hideButton = () => {

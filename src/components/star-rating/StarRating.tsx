@@ -5,7 +5,7 @@ import styles from './StarRating.styles'
 
 type StarRatingProps = {
   rating: number
-  reviews: number
+  reviews?: number
   compact?: boolean
   color?: string
 }

@@ -7,6 +7,36 @@ type Paginable = {
 
 type ProductResults = Paginable & SQLResultSetRowList
 
+const BASE_PRODUCT_SQL = `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
+FROM product p
+LEFT JOIN rating r ON r.product_id = p.id`
+
+export const getProductById = (id: string): Promise<SQLResultSetRowList> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(
+      transaction => {
+        transaction.executeSql(
+          `${BASE_PRODUCT_SQL}
+      WHERE p.id = ?`,
+          [id],
+          (_, { rows }) => {
+            if (rows.length > 0) {
+              resolve(rows.item(0))
+            } else {
+              resolve(null)
+            }
+          },
+          sqlError => {
+            reject(sqlError)
+            return false
+          },
+        )
+      },
+      transactionError => reject(transactionError),
+    )
+  })
+}
+
 export const getProducts = (
   whereTitle?: string,
   orderDirection?: string,
@@ -16,11 +46,11 @@ export const getProducts = (
   return new Promise((resolve, reject) =>
     db.transaction(
       transaction => {
-        const whereClause = whereTitle ? `WHERE p.title LIKE '%${whereTitle}%'` : null
+        const whereClause = whereTitle
+          ? `WHERE p.title LIKE '%${whereTitle}%'`
+          : null
         transaction.executeSql(
-          `SELECT p.*, round(avg(r.score), 1) as rating, count(r.score) as reviews
-          FROM product p
-          LEFT JOIN rating r ON r.product_id = p.id
+          `${BASE_PRODUCT_SQL}
           ${whereClause || ''}
           GROUP BY p.id
           ORDER BY p.price ${orderDirection || 'ASC'}
@@ -28,7 +58,7 @@ export const getProducts = (
          `,
           [],
           (_, { rows }) => {
-            resolve({...rows, page})
+            resolve({ ...rows, page })
           },
           sqlError => {
             console.log(sqlError)
