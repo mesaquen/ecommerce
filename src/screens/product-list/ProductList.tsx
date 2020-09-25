@@ -7,6 +7,7 @@ import ProductItem from './item/ProductItem'
 import styles from './ProductList.styles'
 import detailsStyles from '../product-details/ProductDetails.styles'
 import SearchBar from '../../components/search-bar/SearchBar'
+import { Product } from '../../types/commonTypes'
 
 const ProductList = ({ navigation }): JSX.Element => {
   const [loading, setLoading] = useState(true)
@@ -29,13 +30,18 @@ const ProductList = ({ navigation }): JSX.Element => {
     })
   }, [navigation])
 
+  const extractItems = (data): Product[] => {
+    const nextItems = []
+    for (let i = 0; i < data.rows.length; i++) {
+      nextItems.push(data.rows.item(i))
+    }
+    return nextItems
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProducts()
-      const nextItems = []
-      for (let i = 0; i < data.rows.length; i++) {
-        nextItems.push(data.rows.item(i))
-      }
+      const nextItems = extractItems(data)
       setItems(nextItems)
       setPage(data.page ?? 0)
       setLoading(false)
@@ -48,7 +54,8 @@ const ProductList = ({ navigation }): JSX.Element => {
   const handleSearch = async name => {
     setLoading(true)
     const data = await getProducts(name)
-    setItems(data._array)
+    const nextItems = extractItems(data)
+    setItems(nextItems)
     setPage(data.page ?? 0)
     setLoading(false)
   }
@@ -66,8 +73,9 @@ const ProductList = ({ navigation }): JSX.Element => {
     setLoading(true)
     const data = await getProducts(null, null, nextPage)
     setLoading(false)
-    if (data.length) {
-      setItems(items.concat(data._array))
+    if (data.rows.length) {
+      const fetchedItems = extractItems(data)
+      setItems(items.concat(fetchedItems))
       setPage(nextPage)
     } else {
       hideButton()
