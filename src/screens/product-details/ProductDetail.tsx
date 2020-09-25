@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   SafeAreaView,
-  ScrollView,
   ActivityIndicator,
   Text,
   FlatList,
@@ -11,28 +10,17 @@ import { FlatListSlider } from 'react-native-flatlist-slider'
 import MoneyText from '../../components/money-text/MoneyText'
 import ItemSeparator from '../../components/separator/ItemSeparator'
 import StarRating from '../../components/star-rating/StarRating'
+import { getImagesByProductId } from '../../logic/image/imageService'
 import { getProductById } from '../../logic/product/productService'
 import { getRatingByProductId } from '../../logic/rating/ratingService'
 import styles from './ProductDetails.styles'
 import RatingListItem from './RatingListItem'
 
-const images = [
-  {
-    image:
-      'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-    desc: 'Silent Waters in the mountains in midst of Himilayas',
-  },
-  {
-    image:
-      'https://images.unsplash.com/photo-1455620611406-966ca6889d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1130&q=80',
-    desc:
-      'Red fort in India New Delhi is a magnificient masterpeiece of humans',
-  },
-]
-
 const ProductDetails = ({ route: { params } }): JSX.Element => {
   const [product, setProduct] = useState(null)
   const [comments, setComments] = useState([])
+  const [images, setImages] = useState([])
+
   useEffect(() => {
     const fetchData = async () => {
       const item = await getProductById(params.id)
@@ -51,6 +39,18 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
     fetchComments()
   }, [])
 
+  useEffect(() => {
+    const fetchImages = async () => {
+      const data = await getImagesByProductId(params.id)
+      const productImages = data.map(img => ({banner: img.url}))
+      setImages(data)
+      console.log('\n')
+      console.log('== FETCHING IMAGES FOR ==', params.id)
+      console.log(JSON.stringify(data))
+    }
+    fetchImages()
+  }, [])
+
   const commentsKeyExtractor = item => item.id
 
   const renderRatingItem = ({ item, ...props }) => {
@@ -67,8 +67,9 @@ const ProductDetails = ({ route: { params } }): JSX.Element => {
           <View>
           <FlatListSlider
             data={images}
+            extraData={images}
+            imageKey='url'
             onPress={() => undefined}
-            imageKey='image'
             autoscroll={false}
           />
           <View style={styles.infoContainer}>

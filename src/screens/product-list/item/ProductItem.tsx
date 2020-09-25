@@ -1,8 +1,9 @@
-import React from 'react'
-import { Button, TouchableOpacity, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Image, Button, TouchableOpacity, Text, View } from 'react-native'
 import styles from './ProductItem.styles'
 import StarRating from '../../../components/star-rating/StarRating'
 import PriceLabel from '../../../components/price-label/PriceLabel'
+import { getImagesByProductId } from '../../../logic/image/imageService'
 
 type ProductItemProps = {
   id: string
@@ -27,10 +28,21 @@ const ProductItem = ({
   onAddPress,
   onRemovePress,
 }: ProductItemProps): JSX.Element => {
+  const [productImage, setProductImage] = useState(null)
+  useEffect(() => {
+    const fetchImage = async () => {
+      const imageList = await getImagesByProductId(id)
+      const firstImage = imageList[0]?.url
+      setProductImage(firstImage)
+    }
+    fetchImage()
+  }, [])
   const handleOnPress = () => onPress(id)
   return (
     <TouchableOpacity key={id} style={styles.item} onPress={handleOnPress}>
-      <View style={styles.imageContainer}></View>
+      <View style={styles.imageContainer}>
+        <Image style={styles.image} source={{uri: productImage}} />
+      </View>
       <View style={styles.infoContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>

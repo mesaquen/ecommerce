@@ -13,7 +13,10 @@ export default StyleSheet.create({
   imageContainer: {
     width: 100,
     height: 100,
-    backgroundColor: 'lightblue',
+  },
+  image: {
+    width: 100,
+    height: 100,
   },
   infoContainer: {
     flex: 1,
@@ -25,12 +28,12 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
   price: {
-      marginBottom: 12
+    marginBottom: 12,
   },
   priceContainer: {
     flex: 0,
     flexShrink: 0,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
 })
