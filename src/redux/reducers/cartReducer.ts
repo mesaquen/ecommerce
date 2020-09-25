@@ -1,13 +1,10 @@
-import { Product } from '../../types/commonTypes'
 import { ADD_TO_CART, REMOVE_FROM_CART } from '../types'
 
 const initialState = {
   items: [],
 }
 
-type CartReducer = {
-  items: Product[]
-}
+
 
 export default (state = initialState, action): CartReducer => {
   switch (action.type) {
