@@ -65,9 +65,6 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
       const data = await getImagesByProductId(params.id)
       const productImages = data.map(img => img.url)
       setImages(productImages)
-      console.log('\n')
-      console.log('== FETCHING IMAGES FOR ==', params.id)
-      console.log(JSON.stringify(data))
     }
     fetchImages()
   }, [])

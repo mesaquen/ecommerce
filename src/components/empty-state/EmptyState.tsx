@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Text} from 'react-native'
+import {SafeAreaView, Text} from 'react-native'
 import {MaterialCommunityIcons as MCI} from '@expo/vector-icons'
 import styles from './EmptyState.styles'
 

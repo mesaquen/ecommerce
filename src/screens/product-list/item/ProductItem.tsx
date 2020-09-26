@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Button, TouchableOpacity, Text, View } from 'react-native'
+import { Image, TouchableOpacity, Text, View } from 'react-native'
 import styles from './ProductItem.styles'
 import StarRating from '../../../components/star-rating/StarRating'
 import PriceLabel from '../../../components/price-label/PriceLabel'
