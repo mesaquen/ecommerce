@@ -13,6 +13,8 @@ export interface RemoveFromCartAction {
   payload: string
 }
 
+export type CartActionTypes = AddToCartAction | RemoveFromCartAction
+
 export type CartReducer = {
   items: Product[]
 }

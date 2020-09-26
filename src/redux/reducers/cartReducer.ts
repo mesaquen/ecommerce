@@ -1,12 +1,10 @@
-import { ADD_TO_CART, REMOVE_FROM_CART } from '../types'
+import { ADD_TO_CART, CartActionTypes, CartReducer, REMOVE_FROM_CART } from '../types'
 
 const initialState = {
   items: [],
 }
 
-
-
-export default (state = initialState, action): CartReducer => {
+export default (state = initialState, action: CartActionTypes): CartReducer => {
   switch (action.type) {
     case ADD_TO_CART:
       return {

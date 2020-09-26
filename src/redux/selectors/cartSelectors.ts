@@ -6,7 +6,7 @@ import { getSellingPrice } from '../../MathUtils'
 export const selectCartItems = (state: RootReducer): Product[] =>
   state.cart.items
 
-const sumItems = (total, product) => {
+const sumItems = (total: number, product: Product) => {
   return total + getSellingPrice(product.price, product.discount)
 }
 

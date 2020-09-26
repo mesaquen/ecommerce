@@ -19,8 +19,16 @@ import { getRatingByProductId } from '../../logic/rating/ratingService'
 import styles from './ProductDetails.styles'
 import RatingListItem from './RatingListItem'
 import { selectCartItems } from '../../redux/selectors/cartSelectors'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RouteProp } from '@react-navigation/native'
+import { RootStackParamList } from '../../types/commonTypes'
 
-const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
+type Props = {
+  route: RouteProp<RootStackParamList, 'ProductDetails'>,
+  navigation: StackNavigationProp<RootStackParamList, 'ProductDetails'>
+}
+
+const ProductDetails = ({ route: { params }, navigation }: Props): JSX.Element => {
   const dispatch = useDispatch()
   const productsInCart = useSelector(selectCartItems)
   const [product, setProduct] = useState(null)

@@ -8,17 +8,22 @@ import ProductItem from './item/ProductItem'
 import styles from './ProductList.styles'
 import detailsStyles from '../product-details/ProductDetails.styles'
 import SearchBar from '../../components/search-bar/SearchBar'
-import { Product } from '../../types/commonTypes'
+import { Product, RootStackParamList } from '../../types/commonTypes'
 import { selectCartItems } from '../../redux/selectors/cartSelectors'
 import { addToCart, removeFromCart } from '../../redux/actions/cartActions'
 import EmptyState from '../../components/empty-state/EmptyState'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 const SORT_ORDER = {
   ASC: 'ASC',
   DESC: 'DESC',
 }
 
-const ProductList = ({ navigation }): JSX.Element => {
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList, 'ProductList'>
+}
+
+const ProductList = ({ navigation }: Props): JSX.Element => {
   const productsInCart = useSelector(selectCartItems)
   const dispatch = useDispatch()
   const [sort, setSort] = useState('ASC')
