@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
+  container: {
+    flex: 0,
+    alignItems: 'center'
+  },
   sellingPrice: {
       color: '#444',
     fontSize: 20,

@@ -4,7 +4,7 @@ import styles from './ProductItem.styles'
 import StarRating from '../../../components/star-rating/StarRating'
 import PriceLabel from '../../../components/price-label/PriceLabel'
 import { getImagesByProductId } from '../../../logic/image/imageService'
-import {MaterialCommunityIcons as MCI} from '@expo/vector-icons'
+import { MaterialCommunityIcons as MCI } from '@expo/vector-icons'
 
 type ProductItemProps = {
   id: string
@@ -13,7 +13,7 @@ type ProductItemProps = {
   rating: number
   reviews: number
   discount?: number
-  inCart: boolean
+  inCart?: boolean
   onPress?: (id) => void
   onShopPress?: () => void
   onAddPress?: () => void
@@ -42,14 +42,16 @@ const ProductItem = ({
     }
     fetchImage()
   }, [])
-  const handleOnPress = () => onPress(id)
+
+  const handleOnPress = () => onPress?.call(null, id)
+
   return (
     <TouchableOpacity key={id} style={styles.item} onPress={handleOnPress}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{ uri: productImage }} />
       </View>
-        <View style={styles.infoContainer}>
-      <View style={styles.upperContent}>
+      <View style={styles.infoContainer}>
+        <View style={styles.upperContent}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>
             <StarRating rating={rating} reviews={reviews} compact />
@@ -61,9 +63,39 @@ const ProductItem = ({
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          {!inCart && <MCI.Button color='#09D' iconStyle={styles.flat} backgroundColor='transparent' name='cart-outline' onPress={onShopPress}>Comprar</MCI.Button>}
-          {!inCart && <MCI.Button color='#09D' iconStyle={styles.flat} backgroundColor='transparent' name='cart-plus' onPress={onAddPress}>Adicionar</MCI.Button>}
-          {inCart && <MCI.Button color='#D30' iconStyle={styles.flatRemove} backgroundColor='transparent'  name='cart-remove' onPress={onRemovePress}>Remover</MCI.Button>}
+          {!inCart && (
+            <MCI.Button
+              color='#09D'
+              iconStyle={styles.flat}
+              backgroundColor='transparent'
+              name='cart-outline'
+              onPress={onShopPress}
+            >
+              Comprar
+            </MCI.Button>
+          )}
+          {!inCart && (
+            <MCI.Button
+              color='#09D'
+              iconStyle={styles.flat}
+              backgroundColor='transparent'
+              name='cart-plus'
+              onPress={onAddPress}
+            >
+              Adicionar
+            </MCI.Button>
+          )}
+          {inCart && (
+            <MCI.Button
+              color='#D30'
+              iconStyle={styles.flatRemove}
+              backgroundColor='transparent'
+              name='cart-remove'
+              onPress={onRemovePress}
+            >
+              Remover
+            </MCI.Button>
+          )}
         </View>
       </View>
     </TouchableOpacity>

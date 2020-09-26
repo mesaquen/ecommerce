@@ -2,17 +2,11 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import styles from './PriceLabel.styles'
 import MoneyText from '../money-text/MoneyText'
+import { getSellingPrice } from '../../MathUtils'
 
 const PriceLabel = ({ price, discount }): JSX.Element => {
   const hasDiscount = discount > 0
-  const getSellingPrice = (): number => {
-    if (hasDiscount) {
-      return (1 - discount / 100) * price
-    }
-    return price
-  }
-
-  const sellingPrice = getSellingPrice()
+  const sellingPrice = getSellingPrice(price, discount)
 
   return (
     <View style={styles.container}>

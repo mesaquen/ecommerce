@@ -141,7 +141,7 @@ const ProductDetails = ({ route: { params }, navigation }): JSX.Element => {
                     style={[styles.bold, styles.bigText, styles.title]}
                     value={product.price}
                   />
-                  <Text style={[styles.bold, styles.title]}>Description</Text>
+                  <Text style={[styles.bold, styles.title]}>Descrição do produto</Text>
                   <Text style={[styles.secondaryText]}>
                     {product.description}
                   </Text>
