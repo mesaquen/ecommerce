@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Ecommerce",
+    "slug": "ecommerce",
+    "version": "1.0.0",
+    "android": {
+      "package": "com.mesaque.ecommerce"
+    }
+  },
+  "android": {
+    "package": "com.mesaque.ecommerce",
+    "versionCode": 1
+  }
+}
